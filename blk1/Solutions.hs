@@ -57,6 +57,9 @@ implies False False = True
 implies_ :: Bool -> Bool -> Bool -- implicit parameters
 implies_ a b = (not a) || b
 
+-- implies_ = (||) . not
+-- above is implicit parameters
+
 impliesTest :: Bool
 impliesTest =
   implies True True == implies_ True True &&
