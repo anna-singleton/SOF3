@@ -109,7 +109,61 @@ greetTest' list = map f (list) where
 
 pos :: Eq a => a -> [a] -> Int
 pos a [] = 0
-pos a list = if a == head list then
+pos a list = if a == (head list) then
   0
   else
   1 + pos a (drop 1 list)
+
+-- Q 6.4
+
+-- we assume the sorted list is in ASCENDING order
+
+insert :: Ord a => a -> [a] ->[a]
+insert x [] = [x]
+insert x list = if x <= head list then
+  x : list
+  else
+  (head list) : (insert x (drop 1 list))
+
+-- Q 6.5
+
+isort :: Ord a => [a] -> [a]
+isort list = foldr insert [] list
+
+
+-- Q 6.6 TODO
+{- 
+insert' :: Ord a => a -> [a] -> [a]
+insert' x = foldr insx x []
+  where
+    insx = foldr insert x []
+-}
+
+-- Q 6.7
+
+mystery :: [a] -> [a]
+mystery = foldr (:) []
+
+-- Q 6.8 TODO
+{- 
+mapAsRF :: (a -> b) -> [a] -> [b]
+mapAsRF f = foldr f []
+-}
+
+-- Q 6.9
+
+-- foldl (+) 0 [5,7,6,2] ((((0+5)+7)+6)+2)
+-- foldr (+) 0 [5,7,6,2] (5+(7+(6+(2+0))))
+
+-- Q 6.10
+
+revRF, revLF :: [a] -> [a]
+revRF = foldr undefined undefined
+revLF = foldl undefined undefined
+
+
+-- Q 6.11
+
+lenRF, lenLF :: [a] -> Int
+lenRF = foldr undefined undefined
+lenLF = foldl undefined undefined
