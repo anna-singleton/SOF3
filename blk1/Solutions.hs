@@ -131,13 +131,14 @@ isort :: Ord a => [a] -> [a]
 isort list = foldr insert [] list
 
 
--- Q 6.6 TODO
-{- 
+-- Q 6.6
+  
 insert' :: Ord a => a -> [a] -> [a]
-insert' x = foldr insx x []
+insert' x = foldr insx [x]
   where
-    insx = foldr insert x []
--}
+    insx y ys@(z:zs) | x == z && x < y = x:y:zs
+                     | otherwise = y:ys
+
 
 -- Q 6.7
 
@@ -145,10 +146,10 @@ mystery :: [a] -> [a]
 mystery = foldr (:) []
 
 -- Q 6.8 TODO
-{- 
-mapAsRF :: (a -> b) -> [a] -> [b]
-mapAsRF f = foldr f []
--}
+ 
+--mapAsRF :: (a -> b) -> [a] -> [b]
+--mapAsRF f x = foldr f [] x
+
 
 -- Q 6.9
 
@@ -158,7 +159,7 @@ mapAsRF f = foldr f []
 -- Q 6.10
 
 revRF, revLF :: [a] -> [a]
-revRF = foldr undefined undefined
+revRF (x:xs) = foldr 
 revLF = foldl undefined undefined
 
 
