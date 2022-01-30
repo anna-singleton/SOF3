@@ -1,4 +1,4 @@
-module Block2QA where  -- CHANGE TO MATCH FILENAME
+module Block2Q where  -- CHANGE TO MATCH FILENAME
 
 {-
 # SOF3/Block 2
