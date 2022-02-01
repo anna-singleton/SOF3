@@ -1,5 +1,7 @@
 module Sols where
 
+import Data.Maybe
+
 -- Q1.1
 
 oneone, oneone' :: [Int] -> [Int]
@@ -41,3 +43,21 @@ evaluating ePbs2i [True, False, False, False] gives us an exception
 -}
           
 -- Q2.2
+
+
+ePbs2iM :: Maybe [Bool] -> Maybe Int
+--ePbs2iM x = case x of
+  --Nothing -> Nothing
+  --y -> Just(ePbs2i (fromJust y))
+ePbs2iM x | x==Nothing = Nothing
+          | parity (fromJust x) /= True = Nothing
+          | otherwise = Just (ePbs2i (fromJust x))
+
+doubleOdd :: Int -> Int
+doubleOdd x | odd x = x*2
+
+doubleOddM :: Maybe Int -> Maybe Int
+doubleOddM Nothing = Nothing
+doubleOddM x | odd (fromJust x) = Just ((fromJust x) *2)
+             | otherwise = Nothing
+
