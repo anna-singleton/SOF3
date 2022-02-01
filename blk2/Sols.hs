@@ -15,6 +15,7 @@ oneone' (n:ns) | n `mod` 2 == 0 = (n+1) : oneone' ns
 onetwo, onetwo' :: [String] -> [Bool]
 onetwo css = [(fromEnum c) `mod` 2 == 1 |
               cs <- css, length cs > 1, c <- cs, c `elem` ['a'..'z']]
+
 onetwo' [] = []
 onetwo' (x:xs) = (f x) ++ onetwo' xs
      where f [] = []
@@ -60,4 +61,54 @@ doubleOddM :: Maybe Int -> Maybe Int
 doubleOddM Nothing = Nothing
 doubleOddM x | odd (fromJust x) = Just ((fromJust x) *2)
              | otherwise = Nothing
+             
+maybeDouble :: Maybe Int -> Maybe Int
+maybeDouble x = maybe Nothing (Just . (*2)) x
+
+             
+doubleOddM'   :: Maybe Int -> Maybe Int
+doubleOddM' x = maybe Nothing (f) x
+ where f y | odd y = Just (y * 2)
+           | otherwise = Nothing
+
+
+-- Q 2.3
+
+type Error a = Either String a
+
+ePbs2iE :: Error [Bool] -> Error Int
+ePbs2iE (Left msg) = Left msg
+ePbs2iE (Right bs) | parity bs = Right (bitstring2int bs)
+                   | otherwise = Left "input has odd priority"
+
+doubleOddE :: Error Int -> Error Int
+doubleOddE (Right x) | odd x = (Right (x * 2))
+                     | otherwise = (Left "ERROR: input not odd")
+doubleOddE (Left msg) = Left msg
+
+-- Q3.1
+
+ones, nats :: [Integer]
+ones = 1 : ones
+nats = 0 : map succ nats
+
+-- Q3.2
+
+{-
+    ones:
+base = 1
+recursive = ones ++ [1]
+
+    nats:
+base = 0
+recursive = nats ++ [last+1]
+-}
+
+-- Q3.3
+
+fix :: (a->a) -> a
+fix    f       = f (fix f)
+
+ones' :: [Integer]
+ones' = fix (1:)
 
