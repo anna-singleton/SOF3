@@ -220,11 +220,23 @@ vm1_h' = (Coin `leadsto` (Choc `leadsto` vm1_h))
          `branch`
          (Halt `leadsto` stop)
 
+-- newtype Tree a = Tree [(a, Tree a)] deriving Show
 -- Q4.3
---takeTree :: Int -> Tree a -> Tree a
---takeTree 0 (Tree (t, _)) = t
---takeTree d (Tree (t, ts)) = Tree (t, (takeTree (d-1) ts)) 
-  
+takeTree :: Int -> Tree a -> Tree a
+takeTree 0 _ = (Tree [])  
+takeTree _ (Tree []) = (Tree [])
+--takeTree d (Tree ts) = (Tree (map (takeTree (d-1) . f) ts))
+  --where f t = snd t
+
+-- this handles only the case where the trees do not branch
+takeTree d (Tree ((x,y):_)) = (Tree [(x, (takeTree (d-1) y))])
+
+
+-- takeTree' :: Int -> Tree a -> Tree a
+-- takeTree' 0 _ = (Tree [])  
+-- takeTree' _ (Tree []) = (Tree [])
+-- takeTree' d (Tree ts) = (Tree (map (f d) ts))
+--   where f d (x,y) = (Tree [(x, (takeTree (d-1) y))])
 
 -- Q4.4
   
