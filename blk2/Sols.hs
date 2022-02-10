@@ -47,9 +47,6 @@ evaluating ePbs2i [True, False, False, False] gives us an exception
 
 
 ePbs2iM :: Maybe [Bool] -> Maybe Int
---ePbs2iM x = case x of
-  --Nothing -> Nothing
-  --y -> Just(ePbs2i (fromJust y))
 ePbs2iM x | x==Nothing = Nothing
           | parity (fromJust x) /= True = Nothing
           | otherwise = Just (ePbs2i (fromJust x))
