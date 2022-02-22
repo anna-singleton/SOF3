@@ -32,6 +32,9 @@ studied in "Quantum Computation" (QUCO) in Stage 3 or 4.)
 
 Create a type class, `Group`, with suitable fields.
 -}
+
+
+  
 {-
 The [`newtype Sum a`](https://hackage.haskell.org/package/base-4.14.1.0/docs/Data-Monoid.html#t:Sum) is a renaming of `Num` types `a` that form a `Semigroup` with `(<>) == (+)` and a `Monoid` with `mempty == 0`.
 
