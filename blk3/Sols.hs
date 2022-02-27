@@ -44,16 +44,15 @@ neg    Nought    = Nought
 neg    OneTwenty = TwoForty
 neg    TwoForty  = OneTwenty
 
-{-
-instance Semigroup (EqTriSym a) where
+instance Semigroup EqTriSym where
   (<>) = (|>)
 
-instance Monoid (EqTriSym a) where
-  mempty = Turn Nought
+instance Monoid EqTriSym where
+  mempty = (Rotn Nought)
 
-instance Group (EqTriSym a) where
-  ginverse = 
--}
+instance Group EqTriSym where
+  ginverse (Rotn a) = Rotn (neg a)
+  ginverse (Refl r) = Refl r
 
 -- Q3
 
@@ -122,3 +121,17 @@ sqn x = x /*/ x
 ## Q4.2
 -}
 
+
+
+{-
+## Q4.3
+-}
+
+isOddNat :: Nat -> Bool
+isOddNat Zero = False
+isOddNat (Succ x) = not (isOddNat x)
+
+sumOdd :: Nat -> Nat
+sumOdd Zero = Zero
+sumOdd (Succ x) | isOddNat x = x /+/ (sumOdd x)
+                | otherwise = sumOdd x
