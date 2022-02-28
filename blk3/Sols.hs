@@ -121,7 +121,20 @@ sqn x = x /*/ x
 ## Q4.2
 -}
 
+unitMul :: Nat -> ProofLayout Nat
+unitMul Zero =
+  oneN /*/ Zero :=:
+  Zero :=:
+  QED
 
+unitMul (Succ x) =
+  oneN /*/ (Succ x) :=:
+  (Succ Zero) /*/ (Succ x) :=:
+  (Succ x) /*/ (Succ Zero) :=:
+  (Succ x) /+/ (Succ x) /*/ Zero :=:
+  (Succ x) /+/ Zero :=:
+  (Succ x) :=:
+  QED
 
 {-
 ## Q4.3
