@@ -1,4 +1,5 @@
 module Mock where
+import Data.Char
 
 type Predicate a = a -> Bool
 
@@ -11,7 +12,7 @@ testP = (isPass [] == False) &&
   (isPass [5, 8, 12, 15] == True)
 
 isPass :: [Int] -> Bool
-isPass = undefined
+isPass = ((<=) 40) . foldr (+) 0
 
 
 -- Q1ii
@@ -25,7 +26,7 @@ testAl = (isAlphabet "" == True) &&
   (isAlphabet "Software" == True)
 
 isAlphabet :: String -> Bool
-isAlphabet = undefined
+isAlphabet = all isAlpha
 
 -- Q1iii
 
@@ -37,7 +38,7 @@ testcmbList =
   (cmbList ["1", "2", "3"] ["THE", "SOF", "SYS"] == ["THE", "1", "SOF", "2", "SYS", "3"])
 
 cmbList :: [a] -> [a] -> [a]
-cmbList = undefined
+cmbList xs ys = concat (zipWith (\ x y -> [y,x]) xs ys)
 
 -- Q1iv
 
@@ -49,7 +50,7 @@ testcmbProd =
   (cmbProd [0.23, 3.4, 7.88, 2*0.3] [3.4, 1.3, 2.1, 2] == [0.782, 4.42, 16.548000000000002, 1.2])
 
 cmbProd :: Num a => [a] -> [a] -> [a]
-cmbProd = undefined
+cmbProd = zipWith (*)
 
 -- Q1v
 
@@ -61,7 +62,10 @@ testsqDiff =
   (sqDiff [4, 6, 3, 1, 8] == [9, 4])
 
 sqDiff :: (Num a, Ord a) => [a] -> [a]
-sqDiff = undefined
+sqDiff [] = []
+sqDiff [_] = []
+sqDiff (x:y:r) | x > y = (x-y)^2 : sqDiff (y:r)
+               | otherwise = sqDiff (y:r)
 
 -- Q1vi
 
@@ -73,7 +77,9 @@ testM2int =
   (maybe2int [Just 2, Nothing, Just 3, Just 16, Nothing] == 21)
 
 maybe2int :: [Maybe Int] -> Int
-maybe2int = undefined
+maybe2int = foldr (+) 0 . map f 
+  where f Nothing = 0
+        f (Just x) = x
 
 -- Q1vii
 
@@ -88,7 +94,9 @@ testcmb =
   (cmb "List" [2, 3, 4] [5, 6, 7] == [5, 2, 6, 3, 7, 4])
 
 cmb :: Num a => String -> [a] -> [a] -> [a]
-cmb = undefined
+cmb "Prod" xs ys = zipWith (*) xs ys
+cmb "List" xs ys = concat (zipWith (\ x y -> [y,x]) xs ys)
+cmb _ _ _ = []
 
 
 -- Q1viii
@@ -115,7 +123,7 @@ test1MK :: Bool
 test1MK = the1Mk s1Db == [("Beth", 65), ("Adam", 55), ("Lisa", 60), ("Will", 71), ("Mark", 67)]
 
 the1Mk :: [CS1] -> [(String, Int)]
-the1Mk = undefined
+the1Mk = map (\ x -> (name x, the1 x))
 
 -- Q1viiib
 
@@ -123,7 +131,9 @@ testSOF1 :: Bool
 testSOF1 = tSOF1 s1Db == [("Lisa", 65, 60), ("Mark", 50, 67)]
 
 tSOF1 :: [CS1] -> [(String, Int, Int)]
-tSOF1 = undefined
+tSOF1 [] = []
+tSOF1 (x:xs) | sof1 x > 70 = ((\ y -> (name y, sys1 y, the1 y)) x) : tSOF1 xs
+             | otherwise = tSOF1 xs
 
 -- Q1viiic
 
@@ -131,7 +141,7 @@ testavg :: Bool
 testavg = avgSYS1 s1Db == 60.8
 
 avgSYS1 :: [CS1] -> Float
-avgSYS1 = undefined
+avgSYS1 = (\x -> x / 5) . fromIntegral . foldr ((+) . (\x -> sys1 x)) 0
 
 -- Q1ix
 
@@ -151,8 +161,17 @@ testvowelDigit =
   (vowelDigit "b2o5u8A0" == False)
 
 vowelDigit :: String -> Bool
-vowelDigit = undefined
-
+vowelDigit [] = True
+vowelDigit (_:[]) = True
+vowelDigit (v:d:r) | isVowel v && isNumber d = vowelDigit r
+                   | otherwise = False
+  where isVowel c =
+          c == 'a' || c == 'A' ||
+          c == 'e' || c == 'E' ||
+          c == 'i' || c == 'I' ||
+          c == 'o' || c == 'O' ||
+          c == 'u' || c == 'U'
+          
 
 -- Q1x
 
@@ -161,7 +180,8 @@ data BinTree x = Lf Int | Branch (BinTree x) x (BinTree x)
 
 -- Q1xa
 
-nullBR = undefined
+nullBR :: BinTree Int
+nullBR = Lf 0
 
 -- Q1xb
 
@@ -172,7 +192,10 @@ testBal =
   (isTreeBal (Branch (Branch (Lf 2) 1 (Lf 2)) 2 (Branch (Lf 2) 3 (Lf 2))) == True)
 
 isTreeBal :: BinTree a -> Bool
-isTreeBal = undefined
+isTreeBal (Lf _) = True
+isTreeBal (Branch a _ b) = isTreeBal a && isTreeBal b && getDepth a == getDepth b
+  where getDepth (Lf x) = x
+        getDepth (Branch c _ d) = max (getDepth c) (getDepth d)
 
 -- Q1xc
 
@@ -184,7 +207,8 @@ testN =
   (treeNodes (Branch (Branch (Lf 2) 1 (Lf 2)) 2 (Branch (Lf 2) 3 (Lf 2))) == 3)
 
 treeNodes :: BinTree a -> Int
-treeNodes = undefined
+treeNodes (Lf _) = 0
+treeNodes (Branch a _ b) = 1 + treeNodes a + treeNodes b
 
 -- Q1xi
 
@@ -197,4 +221,8 @@ testBcode =
   (toBarcode " " == Nothing)
 
 toBarcode :: String -> Maybe String
-toBarcode = undefined
+toBarcode s | f s = (Just (map g s))
+            | otherwise = Nothing
+  where f cs = foldr ((&&) . (\x -> x=='0' || x =='1')) True cs
+        g '0' = '.'
+        g '1' = '|'
