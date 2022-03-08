@@ -173,6 +173,12 @@ vowelDigit (v:d:r) | isVowel v && isNumber d = vowelDigit r
           c == 'u' || c == 'U'
           
 
+-- vowelDigit :: String -> Bool
+-- vowelDigit [] = True
+-- vowelDigit (_:[]) = True
+-- vowelDigit (v:d:r) | v `elem` "aAeEiIoOuU" && isNumber d = vowelDigit r
+--                    | otherwise = False
+
 -- Q1x
 
 data BinTree x = Lf Int | Branch (BinTree x) x (BinTree x)
