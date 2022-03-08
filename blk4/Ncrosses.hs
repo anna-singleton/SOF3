@@ -3,7 +3,6 @@ module Ncrosses where
 -- Graham Hutton, Cambridge University Press, 2016.
 
 -- Basic declarations
-
 import Data.Char
 import Data.List
 import System.IO
@@ -103,6 +102,10 @@ getNat prompt = do putStr prompt
 tictactoe :: IO ()
 tictactoe = run empty O 
 
+tictactoe' :: Player -> IO ()
+tictactoe' = run empty
+
+
 run :: Grid -> Player -> IO ()
 run g p = do cls
              goto (1,1)
@@ -110,8 +113,12 @@ run g p = do cls
              run' g p
 
 run' :: Grid -> Player -> IO ()
-run' g p | wins O g  = putStrLn "Player O wins!\n"
-         | wins X g  = putStrLn "Player X wins!\n"
+run' g p | wins O g  = do
+             putStrLn "Player O wins!\n"
+             winner "O"
+         | wins X g  = do
+             putStrLn "Player X wins!\n"
+             winner "X"
          | full g    = putStrLn "It's a draw!\n"
          | otherwise =
               do i <- getNat (prompt p)
@@ -128,3 +135,6 @@ cls = putStr "\ESC[2J"
 
 goto :: (Int,Int) -> IO ()
 goto (x,y) = putStr ("\ESC[" ++ show y ++ ";" ++ show x ++ "H")
+
+winner :: String -> IO ()
+winner = writeFile "champion.txt"
