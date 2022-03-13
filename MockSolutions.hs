@@ -145,8 +145,6 @@ avgSYS1 = (\x -> x / 5) . fromIntegral . foldr ((+) . (\x -> sys1 x)) 0
 
 -- Q1ix
 
--- wtf why was this test so fucking long
-
 testvowelDigit :: Bool
 testvowelDigit =
   (vowelDigit "" == False) &&
@@ -159,19 +157,6 @@ testvowelDigit =
   (vowelDigit "a2ab2" == False) &&
   (vowelDigit "a2o5u8A0" == True) &&
   (vowelDigit "b2o5u8A0" == False)
-
--- vowelDigit :: String -> Bool
--- vowelDigit [] = True
--- vowelDigit (_:[]) = True
--- vowelDigit (v:d:r) | isVowel v && isNumber d = vowelDigit r
---                    | otherwise = False
---   where isVowel c =
---           c == 'a' || c == 'A' ||
---           c == 'e' || c == 'E' ||
---           c == 'i' || c == 'I' ||
---           c == 'o' || c == 'O' ||
---           c == 'u' || c == 'U'
-          
 
 vowelDigit :: String -> Bool
 vowelDigit [] = False
