@@ -95,7 +95,7 @@ niffCommutative False True  = flip niff False True
                               :=: -- not.0
                               True
                               :=: -- id.0
-                              id False 
+                              id True 
                               :=: -- niff.1
                               niff False True
                               :=:
