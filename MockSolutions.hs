@@ -1,5 +1,6 @@
 module Mock where
 import Data.Char
+import Data.List
 
 type Predicate a = a -> Bool
 
@@ -38,7 +39,7 @@ testcmbList =
   (cmbList ["1", "2", "3"] ["THE", "SOF", "SYS"] == ["THE", "1", "SOF", "2", "SYS", "3"])
 
 cmbList :: [a] -> [a] -> [a]
-cmbList xs ys = concat (zipWith (\ x y -> [y,x]) xs ys)
+cmbList xs ys = concat $ zipWith (\ x y -> [y,x]) xs ys
 
 -- Q1iv
 
@@ -66,6 +67,14 @@ sqDiff [] = []
 sqDiff [_] = []
 sqDiff (x:y:r) | x > y = (x-y)^2 : sqDiff (y:r)
                | otherwise = sqDiff (y:r)
+
+sqDiff' :: (Num a, Ord a) => [a] -> [a]
+sqDiff' xs = filter ((<=) 0) $ map f (zip xs (tail xs))
+  where f x | (fst x) > (snd x) = (fst x - (snd x))^2
+            | otherwise = -1
+
+sqDiff'' :: (Num a, Ord a) => [a] -> [a]
+sqDiff'' xs = map (\x -> ((fst x) - (snd x))^2) $ filter (\x -> fst x > snd x) $ (zip xs (tail xs))
 
 -- Q1vi
 

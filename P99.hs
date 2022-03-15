@@ -1,4 +1,5 @@
 module P99 where
+import Data.List
 
 -- P1
 
@@ -61,6 +62,36 @@ p8 [x] = [x]
 p8 (x:xs) | x == (head xs) = (p8 xs)
           | otherwise = x : (p8 xs)
 
+-- P9
+
+p9 :: Eq a => [a] -> [[a]]
+p9 = group 
+
+-- P10
+
+p10 :: Eq a => [a] -> [(Int, a)]
+p10 = map (\x -> (length x, head x)) . group
+
+-- P11
+
+data Item a = Single a | Multiple Int a
+  deriving (Eq, Show)
+
+p11 :: Eq a => [a] -> [Item a]
+p11 = map f . group
+  where f x | length x == 1 = Single (head x)
+            | otherwise = Multiple (length x) (head x)
+
+-- P12
+
+p12 :: [Item a] -> [a]
+p12 = concat . map f 
+  where f (Single x) = [x]
+        f (Multiple c x) = take c $ repeat x
+
+-- P13
+
+
 -- P14
 
 p14 :: [a] -> [a]
@@ -73,3 +104,14 @@ p15 :: [a] -> Int -> [a]
 p15 _ 0 = []
 p15 [] _ = []
 p15 (x:xs) n = x : (p15 [x] (n-1)) ++ (p15 xs n)
+
+-- P16
+
+p16 :: [a] -> Int -> [a]
+p16 xs c | length xs < c = xs
+         | otherwise =  take (c-1) xs ++ (p16 (drop c xs) c)
+
+-- P17
+
+p17 :: [a] -> Int -> ([a], [a])
+p17 = flip splitAt
