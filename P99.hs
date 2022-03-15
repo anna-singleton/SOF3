@@ -1,5 +1,6 @@
 module P99 where
 import Data.List
+import System.Random
 
 -- P1
 
@@ -115,3 +116,50 @@ p16 xs c | length xs < c = xs
 
 p17 :: [a] -> Int -> ([a], [a])
 p17 = flip splitAt
+
+-- P18
+
+p18 :: [a] -> Int -> Int -> [a]
+p18 xs a b | a == 1 = take b xs
+           | a < 1 = []
+           | otherwise = take ((b-a)+1) $ drop (a-1) xs
+
+-- P19
+
+p19 :: Int -> [a] -> [a]
+p19 a xs | a == 0 = xs
+         | a > 0 = drop a xs ++ take a xs
+         | a < 0 = drop (length xs + a) xs ++ take (length xs + a) xs
+
+-- P20
+
+p20 :: Int -> [a] -> (a, [a])
+p20 a xs = (xs !! (a-1), take (a-1) xs ++ drop a xs)
+
+-- P21
+
+p21 :: a -> [a] -> Int -> [a]
+p21 x ys p = take (p-1) ys ++ [x] ++ drop (p-1) ys
+
+-- P22
+
+p22 :: Int -> Int -> [Int]
+p22 x y = [x..y]
+
+-- P23
+
+-- pureGen = mkStdGen 137
+
+-- p23 :: [a] -> Int -> [a]
+-- p23 _ 0 = []
+-- p23 xs y = (xs !! fst (uniformR (0, (y-1)) pureGen)) : p23 xs (y-1)
+
+
+-- P24
+
+-- P25
+
+-- P26
+
+p26 :: Int -> [a] -> [[a]]
+p26 x = filter ((==) x . length) . subsequences
