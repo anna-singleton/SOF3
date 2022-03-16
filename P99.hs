@@ -1,6 +1,6 @@
 module P99 where
 import Data.List
-import System.Random
+
 
 -- P1
 
@@ -163,3 +163,19 @@ p22 x y = [x..y]
 
 p26 :: Int -> [a] -> [[a]]
 p26 x = filter ((==) x . length) . subsequences
+
+-- P27
+
+p27 :: [Int] -> [a] -> [[[a]]]
+p27 = undefined
+
+-- P28
+
+p28 :: [[a]] -> [[a]]
+p28 = sortBy (\ x y -> compare (length x) (length y))
+
+
+-- P31
+
+p31 :: Int -> Bool
+p31 x = not $ any id (map ((==0) . mod x) [2..(x-1)])
