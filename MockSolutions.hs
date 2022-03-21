@@ -90,6 +90,13 @@ maybe2int = foldr (+) 0 . map f
   where f Nothing = 0
         f (Just x) = x
 
+{-
+# Model Solution using fmap
+
+maybe2int :: (Functor f, Foldable f) => f(Maybe Int) -> Int
+maybe2int = sum . fmap (maybe 0 id)
+-}
+
 -- Q1vii
 
 testcmb :: Bool

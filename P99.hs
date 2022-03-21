@@ -73,6 +73,10 @@ p9 = group
 p10 :: Eq a => [a] -> [(Int, a)]
 p10 = map (\x -> (length x, head x)) . group
 
+p10' :: Eq a => [a] -> [(Int, a)]
+p10' = map f . group
+  where f xs = (length xs, head xs)
+
 -- P11
 
 data Item a = Single a | Multiple Int a
@@ -177,5 +181,61 @@ p28 = sortBy (\ x y -> compare (length x) (length y))
 
 -- P31
 
+primes :: [Int]
+primes = [x | x <- [1..], p31 x]
+
 p31 :: Int -> Bool
 p31 x = not $ any id (map ((==0) . mod x) [2..(x-1)])
+
+-- P32
+
+p32 :: Int -> Int -> Int
+p32 = gcd
+
+-- P33
+
+p33 :: Int -> Int -> Bool
+p33 x y = (==) 1 $ gcd x y
+
+-- P34
+
+p34 :: Int -> Int
+p34 x = sum $ map ((\y -> if y then 1 else 0) . (p33 x)) [1..x]
+
+-- P35
+
+-- P36
+
+-- P37
+
+-- P38
+
+-- P39
+
+p39 :: Int -> Int -> [Int]
+p39 x y = filter (p31) [x..y]
+
+-- P40
+
+primesTo :: Int -> [Int]
+primesTo x = filter (p31) [1..x]
+
+p40 :: Int -> (Int, Int)
+p40 x = f $ find (\ (a,b) -> a+b == x) [(a, b) | a <- primesTo x, b <- primesTo x]
+  where f (Just a) = a
+        f Nothing = (-1,-1)
+
+
+-- P41 - P45 are missing
+
+-- P46
+
+p46 :: (Bool -> Bool -> Bool) -> [[Bool]]
+p46 p = [[True, True, p True True],
+        [True, False, p True False],
+        [False, True, p False True],
+        [False, False, p False False]]
+
+and' :: Bool -> Bool -> Bool
+and' = (&&)
+
