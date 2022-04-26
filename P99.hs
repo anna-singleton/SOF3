@@ -16,7 +16,6 @@ p2 (x:_:[]) = (Just x)
 p2 (_:xs) = p2 xs
 p2 [] = Nothing
 
-
 -- P3
 
 p3 :: [a] -> Int -> Maybe a
@@ -236,6 +235,13 @@ p46 p = [[True, True, p True True],
         [False, True, p False True],
         [False, False, p False False]]
 
-and' :: Bool -> Bool -> Bool
-and' = (&&)
+-- P47
 
+-- the definitions of && || and not suffice for this
+
+-- P48
+
+p48 :: Int -> ([Bool] -> Bool) -> [[Bool]]
+p48 x f = [y ++ [f y] | y <- getInputs x]
+  where getInputs 1 = [[True], [False]]
+        getInputs c = map ((:) True) (getInputs (c-1)) ++ map ((:) False) (getInputs (c-1))
