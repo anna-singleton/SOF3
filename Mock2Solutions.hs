@@ -63,8 +63,13 @@ validPlacement :: Placement -> Bool
 validPlacement = validList . toList
 
 validList :: [((Position, Player), Int)] -> Bool
-validList = undefined
-  where getPlayerCounters p = foldr ((+) . snd) 0 $ filter ((==) p . snd . fst)
+validList xs = getPlayerCounters Red == 7 && getPlayerCounters Green == 7 && (all checkvalidTile (map (fst . fst) xs))
+  where getPlayerCounters p = foldr ((+) . snd) 0 $ filter ((==) p . snd . fst) xs
+        checkvalidTile sq | sq `elem` [Start, Home] = (getPCountersTile Red sq) <= piecesPerPlayer &&
+                                                      (getPCountersTile Green sq) <= piecesPerPlayer
+                          | otherwise = (getPCountersTile Red sq) <= 1 &&
+                                        (getPCountersTile Green sq) <= 1
+        getPCountersTile play tile = snd . head $ filter ((==) tile . fst . fst) $ filter ((==) play . snd . fst) xs 
 
 test_validPlacement :: Bool
 test_validPlacement =
@@ -72,7 +77,7 @@ test_validPlacement =
   && not (validPlacement (fromList [((Start, Red), 6), ((Start, Green), 7)]))
 
 initGS :: GameState
-initGS = undefined
+initGS = GameState (fromList [((Start, Green), 7), ((Start, Red), 7)]) Red
 
 test_initGS_placement :: Bool
 test_initGS_placement = validPlacement plac
