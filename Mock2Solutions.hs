@@ -71,6 +71,16 @@ validList xs = getPlayerCounters Red == 7 && getPlayerCounters Green == 7 && (al
                                         (getPCountersTile Green sq) <= 1
         getPCountersTile play tile = snd . head $ filter ((==) tile . fst . fst) $ filter ((==) play . snd . fst) xs 
 
+-- validList' :: [((Position, Player), Int)] -> Bool
+-- validList' xs = getPlayerCounters Red == piecesPerPlayer
+--                 && getPlayerCounters Green == piecesPerPlayer
+--                 && checkLimit Red && checkLimit Green
+--   where getPlayerCounters p = sum [x | ((_, pl), x) <- xs, pl == p]
+--         checkLimit pl = plac (Start, pl) <= piecesPerPlayer && plac (Home, pl) <= piecesPerPlayer
+--           && not (any ((<) 1) [x | ((pos, p), x) <- xs, p == pl, not (pos `elem` [Start, Home])])
+--           && [(pos, x) | ((pos, _), x) <- xs, pos `elem` enumFromTo Sq_5 Sq12, x /= 0]
+--         plac = fromList xs
+
 test_validPlacement :: Bool
 test_validPlacement =
   not (validPlacement (fromList [((Start, Red), 9), ((Start, Green), 7)]))
@@ -89,7 +99,13 @@ test_initGS_placement = validPlacement plac
     GameState plac rd = initGS
 
 possibleMoves :: GameState -> Int -> [Position]
-possibleMoves = undefined
+possibleMoves _ 0 = []
+possibleMoves gs roll = [pos | ((pos, pl), count) <- (toList plac), pl == play, checkValid pos, count > 0]
+  where checkValid pos = pos /= Home
+                         && ((plac ((plus pos roll), play)) == 0 || (plus pos roll) == Home)
+                         && not ((plac ((plus pos roll), (opponent play))) == 1 && (plus pos roll) `elem` safeSquares)
+        safeSquares = [Sq_4, Sq_8, Sq14]
+        GameState plac play = gs
 
 test_possibleMoves :: Bool
 test_possibleMoves = possibleMoves initGS 0 == []
