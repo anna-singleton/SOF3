@@ -35,7 +35,7 @@ p4 (_:xs) = 1 + p4 xs
 p5 :: [a] -> [a]
 p5 [] = []
 p5 (x:xs) = (p5 xs) ++ [x]
-
+  
 -- P6
 
 p6 :: Eq a => [a] -> Bool
@@ -245,3 +245,22 @@ p48 :: Int -> ([Bool] -> Bool) -> [[Bool]]
 p48 x f = [y ++ [f y] | y <- getInputs x]
   where getInputs 1 = [[True], [False]]
         getInputs c = map ((:) True) (getInputs (c-1)) ++ map ((:) False) (getInputs (c-1))
+
+-- P49
+
+p49 :: Int -> [String]
+p49 x = map head $ group $ sort $ [take x lstr | lstr <- permutations (zeros ++ ones)]
+  where zeros = take x (repeat '0')
+        ones = take x (repeat '1')
+
+-- P50
+-- huffman trees / code
+
+
+-- problems here skip to 55
+
+data Tree a = Empty | Branch a (Tree a) (Tree a)
+              deriving (Show, Eq)
+
+-- P55
+

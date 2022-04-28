@@ -112,7 +112,7 @@ test_possibleMoves = possibleMoves initGS 0 == []
                      && possibleMoves initGS 3 == [Start]
 
 move :: GameState -> (Int, Position) -> GameState
-move = undefined
+move (GameState plac play) (roll, from) = undefined
 
 test_move :: Bool
 test_move = plac1 (Start, Red) == pred piecesPerPlayer
