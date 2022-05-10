@@ -270,9 +270,9 @@ Define it using other operators defined in `Prelude`.  Can you solve
 the problem without explicit parameters?
 -}
 implies :: Bool -> Bool -> Bool -- explicit parameters
-implies = undefined
+implies x y = (not x) || y
 implies_ :: Bool -> Bool -> Bool -- implicit parameters
-implies_ = undefined
+implies_ = (||) . not
 
 {-
 It is easy to define Boolean operators using truth tables.
@@ -297,15 +297,16 @@ Define the implication operator twice more, once using a full truth
 table and once using "don't care" patterns.
 -}
 
-{-
-UNCOMMENT AND FIX
 
 implies', implies'' :: Bool -> Bool -> Bool
-implies' a b = undefined -- full table
+implies' True True = True -- full table
+implies' False True = True
+implies' False False = True
+implies' True False = False
 
-implies''a b  = undefined -- using "don't care" patterns
+implies'' False _ = True -- using "don't care" patterns
+implies'' True x = x
 
--}
 
 {-
 ### Q5.6
@@ -330,7 +331,9 @@ input item.
 -}
 
 eats :: Item -> [Item]
-eats = undefined
+eats Dog = [Chicken]
+eats Chicken = [Grain]
+eats Grain = []
 
 {-
 Create a function `danger` that, given two `Item`s, reports if either
@@ -339,7 +342,7 @@ defined.  You may find the `Prelude` function `elem` useful.
 -}
 
 danger :: Item -> Item -> Bool
-danger = undefined
+danger = flip elem . eats
 
 {-
 ## Q6: Recursive functions
@@ -356,8 +359,8 @@ Do this _without_ using any functions from `Prelude`.
 -}
 
 incList :: [Int] -> [Int]
-incList [] = undefined
-incList (n:ns) = undefined
+incList [] = []
+incList (n:ns) = succ n : incList ns
 
 {-
 Haskell has lots of functions in its libraries that capture particular
@@ -369,7 +372,7 @@ map f [a, b, c] == [f a, f b, f c]
 Define `incList'` using `map`.
 -}
 incList' :: [Int] -> [Int]
-incList' = undefined
+incList' = map succ
 
 {-
 ### Q6.2
@@ -385,7 +388,8 @@ As an example, rewrite `greetTest` as `greetTest'`.
 the form `(input, expectedOutput)`.  The function can conveniently be
 defined in a `where` clause.
 -}
-greetTest' = undefined
+greetTest' :: [Bool]
+greetTest' = map (\(x,y) -> (greet x) == y) [("anna", "Hello anna!")]
 
 {-
 ### Q6.3
@@ -412,7 +416,10 @@ the type in your file.
 -}
 
 pos :: Eq a => a -> [a] -> Int
-pos = undefined
+pos x l = go 0 l
+  where go n (y:ys) | y==x = n
+                    | otherwise = go (succ n) ys
+        go _ [] = (-1)
 
 {-
 ### Q6.4
@@ -423,7 +430,9 @@ ordered list.  You may assume that the standard equality (`(==)`,
 defined for the type of elements under consideration.
 -}
 insert :: Ord a => a -> [a] -> [a]
-insert = undefined
+insert x [] = [x]
+insert x r@(y:ys) | x <= y = x : r
+                  | otherwise = y : (insert x ys)
 {-
 Another important pattern of recursion is right-folding.
 
@@ -487,7 +496,7 @@ to behave like `map`, using `foldr`.
 -}
 
 mapAsRF :: (a -> b) -> [a] -> [b]
-mapAsRF f = undefined
+mapAsRF f = foldr ((:) . f) []
 
 {-
 ### Q6.9
@@ -531,8 +540,8 @@ revLF = foldl undefined undefined
 Express `length` of a list as both a right and a left fold.
 -}
 lenRF, lenLF :: [a] -> Int
-lenRF = foldr undefined undefined
-lenLF = foldl undefined undefined
+lenRF = foldr (\_ x -> succ x) 0
+lenLF = foldl (\x _ -> succ x) 0
 
 {-
 ### Q6.12
@@ -554,7 +563,7 @@ x /*/ [a, b, c] == [x * a, x * b, x * c]
 -}
 
 (/*/) :: Int -> Vector -> Vector
-(/*/) = undefined
+(/*/) x = map (*x)
 
 {-
 We can also define addition of vectors.  We will use the symbol `(/+/)`.
@@ -573,10 +582,8 @@ zipWith op [a, b, c] [d, e, f, g] == [a `op` d, b `op` e, c `op` f]
 (Note that the output is the length of the shortest input.)
 -}
 
-  {-
 (/+/) :: Vector -> Vector -> Vector
-sumV = undefined
--}
+(/+/) = zipWith (+)
 
 {-
 In SOF1/Practical 6A/Exercise 6 you are asked to implement equality on
@@ -594,7 +601,9 @@ contents have equality defined, and any renamings, such as `Vector`.
 Define your own version of `zipWith` using explicit recursion.
 -}
 zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
-zipWith' = undefined
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f (x:xs) (y:ys) = (f x y) : zipWith' f xs ys 
 
 {-
 ### Q6.14
@@ -606,7 +615,10 @@ expectes two _ordered_ lists of any type that can be compared, and
 merges the two lists into an ordered list.
 -}
 merge :: Ord a => [a] -> [a] -> [a]
-merge = undefined
+merge [] ys = ys
+merge xs [] = xs
+merge xw@(x:xs) yw@(y:ys) | x <= y = x : merge xs yw
+                          | otherwise = y : merge xw ys
 
 {-
 Define a test `isOrdered :: Ord a => [a] -> Bool` that returns `True`
@@ -620,7 +632,7 @@ and = foldr (&&) True
 ```
 -}
 isOrdered :: Ord a => [a] -> Bool
-isOrdered = undefined
+isOrdered xs = and $ map (\x -> fst x <= snd x) $ zip xs (tail xs)
 {-
 ### Q6.15
 
@@ -635,8 +647,8 @@ hence a function `elfish`.
 -}
 something_ish :: Eq a => [a] -> [a] -> Bool
 elfish :: String -> Bool
-something_ish = undefined
-elfish = undefined
+something_ish pat str = all (flip elem str) pat 
+elfish = something_ish "elf"
 
 {-
 ## References
