@@ -222,9 +222,13 @@ expressed in in pennies.
 -}
 
 bananas :: Int -> Int
-bananas order | order < min_order = undefined
-              | undefined         = undefined
-              | otherwise         = undefined
+bananas order | order < 2 = error "not enough ordered"
+              | otherwise = price
+  where
+    price :: Int
+    price = (if (basePrice > 5000) then (basePrice - 150) else basePrice) 
+    basePrice = 300*order + 499
+
 
 bananasTest :: Bool
 bananasTest =
@@ -254,7 +258,8 @@ numbers and names of parameters, whether guards are needed, and so on.
 -}
 
 pennies2pounds :: Int -> String
-pennies2pounds = undefined
+pennies2pounds x = "$" ++ show pounds ++ "." ++ show pennies
+  where (pounds, pennies) = x `divMod` 100
 
 {-
 ### Q5.5
