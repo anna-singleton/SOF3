@@ -206,6 +206,23 @@ isTreeBal (Branch a _ b) = isTreeBal a && isTreeBal b && getDepth a == getDepth 
   where getDepth (Lf x) = x
         getDepth (Branch c _ d) = max (getDepth c) (getDepth d)
 
+-- EXAMPLE (NOT IN EXAM)
+
+tree2 :: BinTree Int
+tree2 = Branch (Branch (Lf 2) 3 (Lf 5)) 4 (Lf 6)
+
+{-
+     4
+    / \
+   3   6
+  / \
+ 2   5
+-}
+
+sumTree :: BinTree Int -> Int
+sumTree (Branch b1 x b2) = x + (sumTree b1) + (sumTree b2)
+sumTree (Lf x) = x
+  
 -- Q1xc
 
 testN :: Bool
