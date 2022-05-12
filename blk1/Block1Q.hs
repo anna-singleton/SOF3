@@ -162,7 +162,7 @@ The operator `(++)` joins lists together, strings are lists of characters
 -}
 
 greet :: String -> String
-greet name = undefined
+greet name = "Hello " ++ name ++ "!"
 
 greetTest :: Bool
 greetTest
@@ -182,7 +182,10 @@ Example: show 42 == "42"
 -}
 
 cakeBill :: Int -> Int -> String
-cakeBill quantity price = undefined
+cakeBill quantity price = "The cost of " ++ show quantity
+                          ++ " cakes at " ++ show price
+                          ++ "p each is " ++ show (quantity * price)
+                          ++ "p."
 
 cakeBillTest :: Bool
 cakeBillTest =
@@ -196,7 +199,13 @@ Give a function `cakeBill'` that uses correct English grammar.
 -}
 
 cakeBill' :: Int -> Int -> String
-cakeBill' quantity price = undefined
+cakeBill' quantity price = "The cost of " ++ show quantity
+                          ++ cakes ++ show price
+                          ++ "p each is " ++ show (quantity * price)
+                          ++ "p."
+  where cakes = case quantity of
+                  1 -> " cake at "
+                  otherwise -> " cakes at "
 
 cakeBill'Test :: Bool
 cakeBill'Test =
@@ -222,13 +231,11 @@ expressed in in pennies.
 -}
 
 bananas :: Int -> Int
-bananas order | order < 2 = error "not enough ordered"
-              | otherwise = price
-  where
-    price :: Int
-    price = (if (basePrice > 5000) then (basePrice - 150) else basePrice) 
-    basePrice = 300*order + 499
-
+bananas order | order < min_order = 0
+              | price <= 5000 = price 
+              | otherwise = price - 150
+  where min_order = 2
+        price = (300 * order) + 499
 
 bananasTest :: Bool
 bananasTest =
@@ -296,7 +303,6 @@ _    && _    = False
 Define the implication operator twice more, once using a full truth
 table and once using "don't care" patterns.
 -}
-
 
 implies', implies'' :: Bool -> Bool -> Bool
 implies' True True = True -- full table
@@ -388,8 +394,10 @@ As an example, rewrite `greetTest` as `greetTest'`.
 the form `(input, expectedOutput)`.  The function can conveniently be
 defined in a `where` clause.
 -}
-greetTest' :: [Bool]
-greetTest' = map (\(x,y) -> (greet x) == y) [("anna", "Hello anna!")]
+greetTest' :: Bool
+greetTest' = all (\(input,expected) -> expected == greet input) tests
+  where tests = [("anna", "Hello anna!"),
+                ("your mum", "Hello your mum!")]
 
 {-
 ### Q6.3

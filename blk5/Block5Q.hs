@@ -194,8 +194,31 @@ Note: a randomly generated `Student` can have the same `Module` multiple time an
 
 -}
 
+rMaybeInt :: Gen (Maybe Int)
+rMaybeInt = oneof [pure Nothing,
+                  (do
+                    i <- choose(-50, 150)
+                    pure (Just i))]
+
+
+rModuleMark :: Gen (Module, Maybe Int)
+rModuleMark =
+  do
+    m <- rModule
+    i <- rMaybeInt
+    pure (m,i)
+
+rModuleMarkList :: Gen [(Module, Maybe Int)]
+rModuleMarkList = listOf rModuleMark
+
+rStudent :: Gen Student
+rStudent =   
+  do
+    m <- listOf rModuleMark
+    pure (Student m)
 
 instance Arbitrary Student where
+  arbitrary = rStudent
 -- sample $ (arbitrary :: Gen Student)
 
 

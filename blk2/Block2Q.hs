@@ -38,7 +38,7 @@ using list comprehension.
 -}
 oneone, oneone' :: [Int] -> [Int]
 oneone ns = [ n+1 | n <- ns,  n `mod` 2 == 0 ]
-oneone' = undefined
+oneone' = map succ . filter even
 
 {-
 ### Q1.2
@@ -505,7 +505,8 @@ Write a function to cut off a tree at a given depth, so that the
 result can be displayed.
 -}
 takeTree :: Int -> Tree a -> Tree a
-depth = undefined
+takeTree = undefined
+  where depth = undefined
 
 {-
 ### Q4.4
