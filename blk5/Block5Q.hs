@@ -222,3 +222,17 @@ instance Arbitrary Student where
 -- sample $ (arbitrary :: Gen Student)
 
 
+newtype Ex = Ex (Char, Int)
+
+instance Arbitrary Ex where
+  arbitrary =
+    do
+      c <- gChar
+      i <- gInt
+      return (Ex (c,i))
+
+gInt :: Gen Int
+gInt = elements [0..100]
+
+gChar :: Gen Char
+gChar = elements ['a'..'z']

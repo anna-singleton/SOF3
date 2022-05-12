@@ -76,6 +76,8 @@ sqDiff' xs = filter ((<=) 0) $ map f (zip xs (tail xs))
 sqDiff'' :: (Num a, Ord a) => [a] -> [a]
 sqDiff'' xs = map (\x -> ((fst x) - (snd x))^2) $ filter (\x -> fst x > snd x) $ (zip xs (tail xs))
 
+sqDiff''' :: (Num a, Ord a) => [a] -> [a]
+sqDiff''' xs = map (\(x,y) -> (x - y)^2) $ filter (\(x,y) -> x > y) $ (zip xs (tail xs))
 -- Q1vi
 
 testM2int :: Bool
