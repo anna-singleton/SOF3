@@ -68,7 +68,7 @@ parity = (==0) . (`mod` 2) . length . filter (== True)
 
 onethree, onethree' :: [[Bool]] -> [Int]
 onethree = map bitstring2int . filter parity
-onethree' = undefined
+onethree' xs = [bitstring2int x | x <- xs, parity x]
 
 
 {-
@@ -109,7 +109,9 @@ returns a `Maybe Int` instead.  It should return `Nothing` if its
 input is `Nothing` or if the value has odd parity.
 -}
 ePbs2iM :: Maybe [Bool] -> Maybe Int
-ePbs2iM = undefined
+ePbs2iM Nothing = Nothing
+ePbs2iM (Just bs) | parity bs = Just $ bitstring2int bs
+                  | otherwise = Nothing
 {-
 Now suppose that we want to use the result of `ePbs2i'` as the input
 to another function, such as:
@@ -122,7 +124,9 @@ that it expects and returns a `Maybe Int`.  Then we can form the
 pipeline `doubleOddM . ePbs2iM`.
 -}
 doubleOddM :: Maybe Int -> Maybe Int
-doubleOddM = undefined
+doubleOddM (Just x) | odd x = Just (x*2)
+                    | otherwise = Nothing
+doubleOddM Nothing = Nothing
 
 {-
 The solution looks a little ugly!  Later we will see that Haskell has
@@ -146,7 +150,7 @@ doepM [True, True, False] == "Ooops!" -- even number
 ```
 -}
 doepM :: [Bool] -> String
-doepM = undefined
+doepM xs = maybe "Ooops!" show (doubleOddM $ ePbs2iM (Just xs))
 
 {-
 ### Either types
@@ -187,9 +191,12 @@ You may find the `Prelude` function `either` useful.  If the output
 represents an error it should be preceded with the string "ERROR: ".
 -}
 doubleOddE :: Error Int -> Error Int
+doubleOddE (Right x) | odd x = Right (x*2)
+                     | otherwise = Left "number is odd"
+doubleOddE x = x
+
 doepE :: [Bool] -> String
-doubleOddE = undefined
-doepE = undefined
+doepE = undefined 
 
 {-
 ## Q3: Laziness
