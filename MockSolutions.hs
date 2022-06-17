@@ -249,8 +249,15 @@ testBcode =
   (toBarcode " " == Nothing)
 
 toBarcode :: String -> Maybe String
-toBarcode s | f s = (Just (map g s))
+toBarcode = toBarcode'
+
+toBarcode' :: String -> Maybe String
+toBarcode' s | f s = (Just (map g s))
             | otherwise = Nothing
   where f cs = foldr ((&&) . (\x -> x=='0' || x =='1')) True cs
         g '0' = '.'
         g '1' = '|'
+
+        
+-- toBarcode'' :: String -> Maybe String
+-- toBarcode'' = 
