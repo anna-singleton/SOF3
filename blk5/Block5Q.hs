@@ -116,6 +116,8 @@ csStage1 = [Student [(SOF1, Just 40), (THE1, Nothing)], Student [(SOF1, Nothing)
 csStage2 = [Student [(SOF1, Just 40), (SOF2, Nothing)], Student [ (THE1, Just 5), (SOF1, Nothing), (SOF2, Nothing)], Student [(SOF1, Just 56), (HCI1, Just 47)]]
 
 
+
+
 {-
 ### Problem 2
 Given a function `prereq :: Module -> [Module]` check that a student is not taking modules for which they do not have the prerequisites.
@@ -236,3 +238,4 @@ gInt = elements [0..100]
 
 gChar :: Gen Char
 gChar = elements ['a'..'z']
+

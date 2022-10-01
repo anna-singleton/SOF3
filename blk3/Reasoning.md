@@ -1,7 +1,6 @@
-```haskell
 module Reasoning where
 
-```
+{-
 # Reasoning about programs
 # Jeremy Jacob, 15 Jan 2021
 
@@ -29,10 +28,10 @@ Similarly, **structural induction** extends the idea of induction
 
 Here is a simple theorem about reversing the order of a pair.
 Consider the function:
-```haskell
+-}
 rotate :: (a, b) -> (b, a)
 rotate (x, y) = (y, x) -- rotate.0
-```
+{-
 where we have labelled the lines (all one of them!) of the definition
 for later reference.
 
@@ -108,7 +107,7 @@ There are two ways that computations can fail:
 Below, `bottom` is the prototypical infinite loop, while `caput` and
 `caput'` illustrate an implicit undefined computation and an explicit
 undefined computation, both in the case of the empty list.
-```haskell
+-}
 bottom :: a
 bottom = bottom
 
@@ -116,7 +115,7 @@ caput, caput' :: [a] -> a
 caput (x:_) = x
 caput' []    = undefined
 caput' (x:_) = x
-```
+{-
 In the theory we do not distinguish why a computation has failed.  We
 will write all of these as `⊥` (`_|_` in plain text; pronounced
 “bottom”, and hence the name of the definition above).  A function is
@@ -181,14 +180,14 @@ a _little_ bit more, by introducing a suitable data type and
 functions.  We will write equality at the outermost level as `(:=:)`,
 which we pronounce "equivalence" (we can still use `(==)` within the
 expressions about which we are reasoning).
-```haskell
+-}
 infixr 0 :=: -- the fixity and priority of the operator
 data ProofLayout a = QED | a :=: ProofLayout a deriving Show
-```
+{-
 We can make this a `Foldable`, and take advantage of `Prelude`
 functions defined for `Foldable` types to define a **test** when the
 underlying type is in the `Eq` class.
-```haskell
+-}
 instance Foldable ProofLayout where
   foldr f z = ffz
     where
@@ -197,9 +196,9 @@ instance Foldable ProofLayout where
 testPL :: Eq a => ProofLayout a -> Bool
 testPL QED        = True
 testPL (p :=: pl) = all (==p) pl
-```
+{-
 We can now use this to layout the proof in the section above:
-```haskell
+-}
 rotateSelfInverse :: (a, b) -> ProofLayout (a, b)
 rotateSelfInverse (x, y) =
   (rotate . rotate) (x, y)
@@ -212,7 +211,7 @@ rotateSelfInverse (x, y) =
   :=: -- id.0
   id (x, y)
   :=: QED
-```
+{-
 The universal quantification, `∀ p :: (a,b) {...}` is encoded as the
 parameters of `rotateSelfInverse`. `rotateSelfInverse` is a convenient
 name of the theorem when used as a hint in later proofs.
@@ -223,12 +222,12 @@ we can **test**, by calling `testPL . rotateSelfInverse` on suitable
 values of `p`; a suitable value is any concrete example whose elements
 have a type in class `Eq`.  Here is **ONE** example; a proper test
 regime has many.
-```haskell
+-}
 testRSI :: Bool
 testRSI= testPL (rotateSelfInverse (0, 'a'))
-```
+{-
 Here is a **BAD** proof, that passes the syntax and type checks:
-```haskell
+-}
 badProof :: a -> a -> [a] -> ProofLayout a
 badProof y z ys =
   head (y:z:ys)
@@ -239,7 +238,7 @@ badProof y z ys =
 testBadProof, testBadProof' :: Bool
 testBadProof  = testPL (badProof 2 3 [4..9])
 testBadProof' = testPL (badProof 2 2 [4..9])
-```
+{-
 the first of these, `testBadProof` detects that the proof is bad, but
 `testbadProof'` fails to find the error.  It is necessary to test
 widely!
@@ -272,12 +271,12 @@ recursion we need at least one case that has no subcases: these are
 called _base cases_.
 
 Consider any recursive data type, such as `Nat`, or `RGBS`:
-```haskell
+-}
 data Nat = Zero | Succ Nat
 data RGBS a b c d = RedLeaf a | GreenLeaf b
                   | Branch (RGBS a b c d) c (RGBS a b c d)
                   | Stem d (RGBS a b c d)
-```
+{-
 We can identify _base cases_: `Zero` for `Nat`, and `RedLeaf x` and
 `GreenLeaf y` for `RGBS`.  We can also see recursive cases, that
 require inductive steps: `Succ n` for `Nat`, and `Branch left z right`
@@ -303,7 +302,7 @@ length :: [a] -> Int
 length []     = 0             -- length.0
 length (_:xs) = 1 + length xs -- length.1
 ```
-```haskell
+-}
 homAppendAdd :: [a] -> [a] -> ProofLayout Int
 homAppendAdd [] ys =
   length ([] ++ ys)
@@ -327,7 +326,7 @@ homAppendAdd (x:xs) ys =
   :=:
   length (x:xs) + length ys
   :=: QED
-```
+{-
 Note how the proof uses the two key properties of `(+)` as a monoid:
 it has an identity and is associative.
 
@@ -347,7 +346,7 @@ length ⊥ + length ys
 ## Using an inefficient, but clear, definition to justify a less clear, but more efficient definition
 Here is an another important use case for proof.  Consider the two
 definitions:
-```haskell
+-}
 rv0, rv1 :: [a] -> [a] 
 rv0 []     = []           -- rv0.0
 rv0 (x:xs) = rv0 xs ++ [x] -- rv1.1
@@ -356,7 +355,7 @@ rv1 = rv1' []
   where
     rv1' ys []     = ys             -- rv1'.0
     rv1' ys (x:xs) = rv1' (x:ys) xs -- rv1'.1
-```
+{-
 It should be fairly easy to see that `rv0` reverses its input list.
 Less easy is to see that it takes quadratic time: concatenation `(++)`
 is linear in its first argument, and concatenation is called a linear
@@ -420,4 +419,4 @@ Note that:
    assignment, these methods use _substitution_.  This technique
    underpins the way that functional programs are executed, and terms
    in our proof are instantiated.
-```haskell
+-}

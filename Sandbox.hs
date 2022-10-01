@@ -29,3 +29,10 @@ isTreeBal (Lf _) = True
 isTreeBal (Branch a _ b) = isTreeBal a && isTreeBal b && getDepth a == getDepth b
   where getDepth (Lf x) = x
         getDepth (Branch c _ d) = max (getDepth c) (getDepth d)
+
+barz str = sequenceA $ fmap func str
+    where
+        func x
+            | x == '1' = Just '|'
+            | x == '0' = Just '.'
+            | otherwise = Nothing

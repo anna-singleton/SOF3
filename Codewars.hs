@@ -45,3 +45,22 @@ rowSumOddNumbers x = sum $ take n $ drop (((n)*(n-1))`div`2) odds
 --   minute = 60
 
 
+chain :: a -> [a -> a] -> a
+chain x fs = foldl apply x fs
+  where
+    apply :: a -> (a -> a) -> a
+    apply y f = f y
+
+
+expd :: Int -> String
+expd = intercalate " + " . map show . unfoldr next
+  where
+    next :: Int -> Maybe (Int, Int)
+    next x = if (x <= 0) then Nothing else
+      if x < 10 then Just (x, -1) else Just $ ((x `div` (getOrder x))*(getOrder x), x `mod` (getOrder x))
+    getOrder :: Int -> Int
+    getOrder x = last $ takeWhile (<=x) $ iterate (*10) 1
+
+
+sumMaybeIntStructure :: [Maybe Int] -> Maybe Int
+sumMaybeIntStructure xs = undefined
