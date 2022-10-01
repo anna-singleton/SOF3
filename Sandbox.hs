@@ -36,3 +36,10 @@ barz str = sequenceA $ fmap func str
             | x == '1' = Just '|'
             | x == '0' = Just '.'
             | otherwise = Nothing
+
+markdist :: Float -> Float
+markdist x | x > 40 && x <= 45 = 40 + (x - 40) * 0.5
+           | x > 45 && x <= 80 = 45 + (x - 50) * (35 / 45)
+           | x > 80 && x <= 95 = 80 + (x - 95) * (20 / 5)
+           | otherwise = x
+>>>>>>> main
